@@ -6,92 +6,11 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:11:13 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 17:12:41 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	drop_forks(t_philo *philo)
-{
-	pthread_mutex_lock(philo->fork_mutex);
-	pthread_mutex_lock(&philo->philo_mutex);
-	philo->right_fork->available = TRUE;
-	philo->right_fork->holded_by = 0;
-	philo->left_fork->available = TRUE;
-	philo->left_fork->holded_by = 0;
-	pthread_mutex_unlock(&philo->philo_mutex);
-	pthread_mutex_unlock(philo->fork_mutex);
-}
-
-void *philosopher(void *data) {
-
-	t_philo *philo = (t_philo *) data;
-	t_bool	waiting_fork;
-
-	waiting_fork = TRUE;
-	while(!is_dead(philo) && !is_stopped(philo)) {
-
-		while (waiting_fork && !is_dead(philo) && !is_stopped(philo)) {
-
-			pthread_mutex_lock(philo->fork_mutex);
-			pthread_mutex_lock(&philo->philo_mutex);
-
-			if (philo->left_fork->available) {
-				philo->left_fork->available = FALSE;
-				philo->left_fork->holded_by = philo->number;
-				printf(FORK_MSG, time_millisec(), philo->number);
-			}
-
-			if (philo->right_fork && philo->right_fork->available) {
-				philo->right_fork->available = FALSE;
-				philo->right_fork->holded_by = philo->number;
-				printf(FORK_MSG, time_millisec(), philo->number);
-			}
-
-			waiting_fork = is_waiting_fork(philo);
-
-			pthread_mutex_unlock(&philo->philo_mutex);
-			pthread_mutex_unlock(philo->fork_mutex);
-		}
-
-		if (!is_dead(philo) && !is_stopped(philo))
-		{
-			pthread_mutex_lock(&philo->philo_mutex);
-			printf(EATING_MSG, time_millisec(), philo->number);
-			philo->status = EATING;
-			pthread_mutex_unlock(&philo->philo_mutex);
-			usleep(philo->timer->eat_interv * 1000);
-
-			pthread_mutex_lock(&philo->philo_mutex);
-			philo->meals++;
-			philo->ate_at = time_millisec();
-			pthread_mutex_unlock(&philo->philo_mutex);
-			drop_forks(philo);
-			waiting_fork = TRUE;
-		}
-		
-		if (!is_dead(philo) && !is_stopped(philo))
-		{
-			pthread_mutex_lock(&philo->philo_mutex);
-			printf(SLEEPING_MSG, time_millisec(), philo->number);
-			philo->status = SLEEPING;
-			pthread_mutex_unlock(&philo->philo_mutex);
-			usleep(philo->timer->sleep_interv * 1000);
-		}
-
-		if (!is_dead(philo) && !is_stopped(philo))
-		{
-			pthread_mutex_lock(&philo->philo_mutex);
-			printf(THINKING_MSG, time_millisec(), philo->number);
-			philo->status = THINKING;
-			pthread_mutex_unlock(&philo->philo_mutex);
-			usleep(20 * 1000);
-		}
-	}
-	return (NULL);
-}
-
 
 
 int main(void) {
