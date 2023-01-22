@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 09:25:51 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 16:06:50 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void check_death(t_philo *philo)
 	else
 		compare_time = philo->ate_at;
 	philo->died = (time_millisec() - compare_time >= philo->timer->death_interv);
-	// printf("time differ %ld\n", time_millisec() - compare_time);
+	if (philo->died)
+		philo->died_at = time_millisec();
 	pthread_mutex_unlock(&philo->philo_mutex);
 }
 
@@ -64,6 +65,7 @@ void stop(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->philo_mutex);
 	philo->stopped = TRUE;
+	philo->stopped_at = time_millisec();
 	pthread_mutex_unlock(&philo->philo_mutex);
 }
 
@@ -138,6 +140,7 @@ void *philosopher(void *data) {
 			usleep(philo->timer->eat_interv * 1000);
 
 			pthread_mutex_lock(&philo->philo_mutex);
+			philo->meals++;
 			philo->ate_at = time_millisec();
 			pthread_mutex_unlock(&philo->philo_mutex);
 			drop_forks(philo);
@@ -168,92 +171,147 @@ void *philosopher(void *data) {
 void	*monitor(void *data)
 {
 	t_monitor *monitor = (t_monitor *) data;
+	t_table	*table;
 	t_bool end;
+	
+	int meals_count;
 
 	end = FALSE;
+	table = monitor->table;
 	while (!end)
 	{
-		for(int i = 0; i < monitor->philos_num; i++)
+		meals_count = 0;
+		for(int i = 0; i < table->philos_num; i++)
+			check_death(&table->philos[i]);
+		for(int i = 0; i < table->philos_num; i++)
 		{
-			check_death(&monitor->philos[i]);
-			if (is_dead(&monitor->philos[i]))
+			if (is_dead(&table->philos[i]))
 			{
-				printf(DIED_MSG, time_millisec(), monitor->philos[i].number);
+				printf(DIED_MSG, time_millisec(), table->philos[i].number);
 				end = TRUE;
-				for(int x = 0; x < monitor->philos_num; x++)
-				{
-					stop(&monitor->philos[x]);
-				}
+				break;
+			}
+		}
+		for(int i = 0; i < table->philos_num; i++)
+		{
+			pthread_mutex_lock(&table->philos[i].philo_mutex);
+			if (table->philos[i].meals >= table->meals_goal)
+				meals_count++;
+			pthread_mutex_unlock(&table->philos[i].philo_mutex);
+
+			if (table->meals_goal && meals_count >= table->philos_num)
+			{
+				end = TRUE;
 				break;
 			}
 		}
 	}
-	for(int x = 0; x < monitor->philos_num; x++)
-	{
-		pthread_join(monitor->philos[x].thread, NULL);
-		printf("philo %ld ended\n", monitor->philos[x].number);
-	}
+	for(int x = 0; x < table->philos_num; x++)
+		stop(&table->philos[x]);
+	for(int x = 0; x < table->philos_num; x++)
+		pthread_join(table->philos[x].thread, NULL);
 	return NULL;
+}
+
+void	print_philo(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->philo_mutex);
+	printf("Philo %02ld | ", philo->number);
+	if (philo->died)
+		printf("DEAD  | ");
+	else
+		printf("ALIVE | ");
+	printf("meals: %2d | ", philo->meals);
+	printf("began: %13ld | ", philo->began_at);
+	printf("last meal: %13ld | ", philo->ate_at);
+	printf("died at: %13ld | ", philo->died_at);
+	printf("hungry time (ms): ");
+	if (philo->died && philo->ate_at)
+		printf("%ld\n", philo->died_at - philo->ate_at);
+	else if (philo->died && !philo->ate_at)
+		printf("%ld\n", philo->died_at - philo->began_at);
+	else if (philo->ate_at)
+	{
+		if (philo->stopped_at > philo->ate_at)	
+			printf("%ld\n", philo->stopped_at - philo->ate_at);
+		else
+			printf("%ld\n", 0L);
+	}
+	else
+		printf("%ld\n", philo->stopped_at - philo->began_at);
+}
+
+void	summary(t_table *table)
+{
+	t_philo *philo;
+	
+	printf("\nSUMMARY ====\n");
+	for(int i = 0; i < table->philos_num; i++)
+	{
+		philo = &table->philos[i];
+		print_philo(philo);
+	}
 }
 
 int main(void) {
 
-	pthread_mutex_t	fork_mutex;
-	int				philos_num;
-	t_fork			*forks;
-	t_philo			*philos;
 	t_ptimer		timer;
-	t_monitor		monitor_data;
+	t_table			table;
+	t_monitor		dmonitor;
 
-	philos_num = 5;
-	forks = (t_fork *) malloc(sizeof(t_fork) * philos_num);
-	philos = (t_philo *) malloc(sizeof(t_philo) * philos_num);
-
-
-	timer.death_interv = 800;
+	timer.death_interv = 500;
 	timer.eat_interv = 200;
 	timer.sleep_interv = 200;
+	table.meals_goal = 3;
+	table.philos_num = 30;
+	table.forks = (t_fork *) malloc(sizeof(t_fork) * table.philos_num);
+	table.philos = (t_philo *) malloc(sizeof(t_philo) * table.philos_num);
+	pthread_mutex_init(&table.fork_mutex, NULL);
+
+	dmonitor.table = &table;
+
 
 	// Inicializa os dados dos philosopher
-	for(int i = 0; i < philos_num; i++)
+	for(int i = 0; i < table.philos_num; i++)
 	{
-		forks[i].available = TRUE;
-		forks[i].holded_by = 0;
-
-		philos[i].number = i + 1;
-		philos[i].died = FALSE;
-		philos[i].stopped = FALSE;
-		philos[i].began_at = time_millisec();
-		philos[i].ate_at = 0;
-		philos[i].meals = 0;
-		philos[i].status = WAITING_FORK;
-		philos[i].fork_mutex = &fork_mutex;
-		philos[i].timer = &timer;
-		philos[i].left_fork = &forks[i];
-		if (i == philos_num - 1)
-			philos[i].right_fork = &forks[0];
-		else if (philos_num <= 1)
-			philos[i].right_fork = NULL;
+		table.forks[i].available = TRUE;
+		table.forks[i].holded_by = 0;
+		table.philos[i].number = i + 1;
+		table.philos[i].died = FALSE;
+		table.philos[i].stopped = FALSE;
+		table.philos[i].began_at = time_millisec();
+		table.philos[i].ate_at = 0;
+		table.philos[i].died_at = 0;
+		table.philos[i].stopped_at = 0;
+		table.philos[i].meals = 0;
+		table.philos[i].status = WAITING_FORK;
+		table.philos[i].fork_mutex = &table.fork_mutex;
+		table.philos[i].timer = &timer;
+		table.philos[i].left_fork = &table.forks[i];
+		if (i == table.philos_num - 1)
+			table.philos[i].right_fork = &table.forks[0];
+		else if (table.philos_num <= 1)
+			table.philos[i].right_fork = NULL;
 		else
-			philos[i].right_fork = &forks[i + 1];
+			table.philos[i].right_fork = &table.forks[i + 1];
+
+		pthread_mutex_init(&table.philos[i].philo_mutex, NULL);
 	}
 
 	// Inicializada threads;
-	for(int i = 0; i < philos_num; i++)
+	for(int i = 0; i < table.philos_num; i++)
 	{
-		pthread_create(&philos[i].thread, NULL, philosopher, (void *) &philos[i]);
+		pthread_create(&table.philos[i].thread, NULL, philosopher, (void *) &table.philos[i]);
 	}
 
-	monitor_data.meals_goal = 0;
-	monitor_data.philos = philos;
-	monitor_data.philos_num = philos_num;
-
-	pthread_create(&monitor_data.thread, NULL, monitor, (void *) &monitor_data);
-	pthread_join(monitor_data.thread, NULL);
+	pthread_create(&dmonitor.thread, NULL, monitor, (void *) &dmonitor);
+	pthread_join(dmonitor.thread, NULL);
 
 
+
+	summary(&table);
 	// liberar memória
-	free(philos);
-	free(forks);
+	free(table.philos);
+	free(table.forks);
 
 }

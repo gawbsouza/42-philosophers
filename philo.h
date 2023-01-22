@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 09:25:47 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 12:54:07 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,15 @@ typedef struct s_philo
 	t_fork			*right_fork;
 	long			began_at;
 	long			ate_at;
+	long			died_at;
 	t_ptimer		*timer;
 	t_status		status;
 	t_bool			stopped;
+	long			stopped_at;
 	pthread_mutex_t	philo_mutex;
 	pthread_mutex_t	*fork_mutex;
 	pthread_t		thread;
 }	t_philo;
-
-typedef struct s_monitor
-{
-	int				meals_goal;
-	int				philos_num;
-	t_philo			*philos;
-	pthread_t		thread;
-}	t_monitor;
 
 typedef struct s_table
 {
@@ -86,5 +80,11 @@ typedef struct s_table
 	int				meals_goal;
 	pthread_mutex_t	fork_mutex;
 }	t_table;
+
+typedef struct s_monitor
+{
+	t_table		*table;
+	pthread_t	thread;
+}	t_monitor;
 
 #endif
