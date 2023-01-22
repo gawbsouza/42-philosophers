@@ -6,31 +6,12 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:39:49 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 16:48:17 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void update_philo_health(t_philo *philo)
-{
-	long	compare_time;
-
-	pthread_mutex_lock(&philo->philo_mutex);
-	if (philo->status == EATING)
-	{
-		pthread_mutex_unlock(&philo->philo_mutex);
-		return ;
-	}
-	if (!philo->ate_at)
-		compare_time = philo->began_at;
-	else
-		compare_time = philo->ate_at;
-	philo->died = (time_millisec() - compare_time >= philo->timer->death_interv);
-	if (philo->died)
-		philo->died_at = time_millisec();
-	pthread_mutex_unlock(&philo->philo_mutex);
-}
 
 t_bool is_dead(t_philo *philo)
 {
