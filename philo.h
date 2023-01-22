@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:53:54 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 17:10:40 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,5 +92,8 @@ t_bool	is_dead(t_philo *philo);
 void	*monitor(void *data);
 void	update_philo_health(t_philo *philo);
 void	summary(t_table *table);
+t_bool	is_dead(t_philo *philo);
+t_bool	is_stopped(t_philo *philo);
+t_bool	is_waiting_fork(t_philo *philo);
 
 #endif
