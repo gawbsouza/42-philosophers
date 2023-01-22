@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:12:32 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 16:38:15 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_table
 {
 	t_fork			*forks;
 	t_philo			*philos;
-	int				philos_num;
+	size_t			philos_num;
 	int				meals_goal;
 	pthread_mutex_t	fork_mutex;
 }	t_table;
@@ -88,5 +88,8 @@ typedef struct s_monitor
 }	t_monitor;
 
 long	time_millisec(void);
+t_bool	is_dead(t_philo *philo);
+void	*monitor(void *data);
+void	update_philo_health(t_philo *philo);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:10:35 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 16:39:49 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void check_death(t_philo *philo)
+void update_philo_health(t_philo *philo)
 {
 	long	compare_time;
 
@@ -50,14 +50,6 @@ t_bool is_stopped(t_philo *philo)
 	stopped = philo->stopped;
 	pthread_mutex_unlock(&philo->philo_mutex);
 	return (stopped);
-}
-
-void stop(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->philo_mutex);
-	philo->stopped = TRUE;
-	philo->stopped_at = time_millisec();
-	pthread_mutex_unlock(&philo->philo_mutex);
 }
 
 t_bool is_waiting_fork(t_philo *philo)
@@ -159,51 +151,6 @@ void *philosopher(void *data) {
 	return (NULL);
 }
 
-void	*monitor(void *data)
-{
-	t_monitor *monitor = (t_monitor *) data;
-	t_table	*table;
-	t_bool end;
-	
-	int meals_count;
-
-	end = FALSE;
-	table = monitor->table;
-	while (!end)
-	{
-		meals_count = 0;
-		for(int i = 0; i < table->philos_num; i++)
-			check_death(&table->philos[i]);
-		for(int i = 0; i < table->philos_num; i++)
-		{
-			if (is_dead(&table->philos[i]))
-			{
-				printf(DIED_MSG, time_millisec(), table->philos[i].number);
-				end = TRUE;
-				break;
-			}
-		}
-		for(int i = 0; i < table->philos_num; i++)
-		{
-			pthread_mutex_lock(&table->philos[i].philo_mutex);
-			if (table->philos[i].meals >= table->meals_goal)
-				meals_count++;
-			pthread_mutex_unlock(&table->philos[i].philo_mutex);
-
-			if (table->meals_goal && meals_count >= table->philos_num)
-			{
-				end = TRUE;
-				break;
-			}
-		}
-	}
-	for(int x = 0; x < table->philos_num; x++)
-		stop(&table->philos[x]);
-	for(int x = 0; x < table->philos_num; x++)
-		pthread_join(table->philos[x].thread, NULL);
-	return NULL;
-}
-
 void	print_philo(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->philo_mutex);
@@ -237,7 +184,7 @@ void	summary(t_table *table)
 	t_philo *philo;
 	
 	printf("\nSUMMARY ====\n");
-	for(int i = 0; i < table->philos_num; i++)
+	for(size_t i = 0; i < table->philos_num; i++)
 	{
 		philo = &table->philos[i];
 		print_philo(philo);
@@ -263,7 +210,7 @@ int main(void) {
 
 
 	// Inicializa os dados dos philosopher
-	for(int i = 0; i < table.philos_num; i++)
+	for(size_t i = 0; i < table.philos_num; i++)
 	{
 		table.forks[i].available = TRUE;
 		table.forks[i].holded_by = 0;
@@ -290,7 +237,7 @@ int main(void) {
 	}
 
 	// Inicializada threads;
-	for(int i = 0; i < table.philos_num; i++)
+	for(size_t i = 0; i < table.philos_num; i++)
 	{
 		pthread_create(&table.philos[i].thread, NULL, philosopher, (void *) &table.philos[i]);
 	}
