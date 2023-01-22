@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:08:29 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:10:32 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 17:42:55 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_bool	is_waiting_fork(t_philo *philo)
 {
 	t_bool	waiting;
 
+	pthread_mutex_lock(philo->fork_mutex);
+	pthread_mutex_lock(&philo->philo_mutex);
 	if (!philo->right_fork)
 		waiting = TRUE;
 	else if (philo->left_fork->holded_by != philo->number)
@@ -48,5 +50,7 @@ t_bool	is_waiting_fork(t_philo *philo)
 		waiting = TRUE;
 	else
 		waiting = FALSE;
+	pthread_mutex_unlock(&philo->philo_mutex);
+	pthread_mutex_unlock(philo->fork_mutex);
 	return (waiting);
 }
