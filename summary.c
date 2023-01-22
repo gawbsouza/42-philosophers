@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:33 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:57:54 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 17:57:55 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,14 @@ static void	print_philo(t_philo *philo)
 	pthread_mutex_lock(&philo->philo_mutex);
 	printf("Philo %02ld | ", philo->number);
 	if (philo->died)
-		printf("DEAD  | ");
+		printf(RED"DEAD  | "RESET);
 	else
 		printf("ALIVE | ");
 	printf("meals: %2d | ", philo->meals);
 	printf("began: %13ld | ", philo->began_at);
 	printf("last meal: %13ld | ", philo->ate_at);
 	printf("died at: %13ld | ", philo->died_at);
-	printf("hungry time (ms): ");
+	printf("starve time (ms): ");
 	if (philo->died && philo->ate_at)
 		printf("%ld\n", philo->died_at - philo->ate_at);
 	else if (philo->died && !philo->ate_at)

@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:34:00 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 17:54:21 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@
 
 //-fsanitize=thread  detectar race condition
 
+# define RESET "\033[0m"
+# define RED "\033[0;31m"
+
 # define EATING_MSG "%ld %ld is eating\n"
 # define SLEEPING_MSG "%ld %ld is sleeping\n"
 # define THINKING_MSG "%ld %ld is thinking\n"
 # define FORK_MSG "%ld %ld has taken a fork\n"
-# define DIED_MSG "%ld %ld died\n"
+# define DIED_MSG RED"%ld %ld died\n"RESET
 
 # define FALSE 0
 # define TRUE 1
