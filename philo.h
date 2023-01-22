@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 12:54:07 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 16:12:32 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define FALSE 0
 # define TRUE 1
 
-typedef int t_bool;
+typedef int	t_bool;
 
 typedef struct s_ptimer
 {
@@ -86,5 +86,7 @@ typedef struct s_monitor
 	t_table		*table;
 	pthread_t	thread;
 }	t_monitor;
+
+long	time_millisec(void);
 
 #endif
