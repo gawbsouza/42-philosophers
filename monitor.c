@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 16:46:03 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 19:04:24 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ static void		stop_philo(t_philo *philo);
 
 void	*monitor(void *data)
 {
-	t_monitor	*monitor;
 	t_table		*table;
 	size_t		i;
 
-	monitor = (t_monitor *) data;
-	table = monitor->table;
+	table = (t_table *) data;
 	while (!has_philo_dead(table) && !meals_goal_reached(table))
 		update_philos_health(table);
 	i = 0;
@@ -75,13 +73,15 @@ static t_bool	meals_goal_reached(t_table *table)
 static t_bool	has_philo_dead(t_table *table)
 {
 	size_t	i;
+	long	current_time;
 
 	i = 0;
 	while (i < table->philos_num)
 	{
 		if (is_dead(&table->philos[i]))
 		{
-			printf(DIED_MSG, time_millisec(), table->philos[i].number);
+			current_time = time_millisec();
+			printf(RED DIED_MSG RESET, current_time, table->philos[i].number);
 			return (TRUE);
 		}
 		i++;

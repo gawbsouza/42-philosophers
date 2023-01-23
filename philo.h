@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:54:21 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:24:57 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 # define SLEEPING_MSG "%ld %ld is sleeping\n"
 # define THINKING_MSG "%ld %ld is thinking\n"
 # define FORK_MSG "%ld %ld has taken a fork\n"
-# define DIED_MSG RED"%ld %ld died\n"RESET
+# define DIED_MSG "%ld %ld died\n"
 
 # define FALSE 0
 # define TRUE 1
@@ -84,12 +84,6 @@ typedef struct s_table
 	pthread_mutex_t	fork_mutex;
 }	t_table;
 
-typedef struct s_monitor
-{
-	t_table		*table;
-	pthread_t	thread;
-}	t_monitor;
-
 long	time_millisec(void);
 t_bool	is_dead(t_philo *philo);
 void	*monitor(void *data);
@@ -101,5 +95,10 @@ t_bool	is_waiting_fork(t_philo *philo);
 void	*philosopher(void *data);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);
+void	timer_init(t_ptimer *timer, long death, long eat, long sleep);
+void	table_init(t_table *table, size_t philos_num, int meals_goal);
+void	philosopher_init(t_philo *philo, size_t number);
+void	table_philos_init(t_table *table, t_ptimer *timer);
+void	threads_init(t_table *table);
 
 #endif
