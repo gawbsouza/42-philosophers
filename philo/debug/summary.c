@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:33 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:43:54 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 18:38:36 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	print_philo(t_philo *philo)
 	pthread_mutex_lock(&philo->philo_mutex);
 	printf("Philo %02ld | ", philo->number);
 	if (philo->died)
-		printf(RED"DEAD  | "RESET);
+		printf(RED "DEAD " RESET " | ");
 	else
 		printf("ALIVE | ");
 	printf("meals: %2d | ", philo->meals);
