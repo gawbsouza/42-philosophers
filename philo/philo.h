@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 09:09:40 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 16:57:25 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # define RESET "\033[0m"
 # define RED "\033[0;31m"
 # define BLUE "\033[0;34m"
+# define GREEN "\033[0;32m"
 # define GREY "\033[1;30m"
 
 # define EATING_MSG "%ld %ld is eating\n"
