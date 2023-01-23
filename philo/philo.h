@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:52:08 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:57:58 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <sys/time.h>
-
-//-fsanitize=thread  detectar race condition
 
 # define RESET "\033[0m"
 # define RED "\033[0;31m"

@@ -3,6 +3,8 @@ CFLAGS = -Wall -Werror -Wextra -pthread -g
 
 NAME = philosophers
 
+# -fsanitize=thread  detect race condition
+
 all:
 	gcc $(CFLAGS) philo/*.c philo/*/*.c -o $(NAME)
 	./$(NAME)
