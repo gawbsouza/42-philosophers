@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 22:05:11 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 18:16:41 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	*monitor_runner(void *arg)
 {
 	t_simulation	*simulation;
 	size_t			i;
+	long			time;
 
 	simulation = (t_simulation *) arg;
 	while (!has_philo_dead(simulation) && !meals_goal_reached(simulation))
@@ -32,11 +33,12 @@ void	*monitor_runner(void *arg)
 		i++;
 	}
 	i = 0;
+	time = time_millisec();
 	while (i < simulation->philos_num)
 	{
 		pthread_join(simulation->philos[i].thread, NULL);
-		if (simulation->philos[i].died)
-			printf(RED DIED_MSG RESET, time_millisec(), simulation->philos[i].number);
+		if (simulation->philos[i++].died)
+			printf(RED DIED_MSG RESET, time, simulation->philos[i].number);
 		i++;
 	}
 	i = 0;
