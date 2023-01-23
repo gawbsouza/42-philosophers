@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:28:36 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:47:56 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int	main(void)
 	simulation_init(&simulation, 30, 3);
 	simulation_philos_init(&simulation, &timer);
 	threads_init(&simulation);
-	summary(&simulation);
+	if (DEBUG_MODE)
+		summary(&simulation);
 	free(simulation.philos);
 	free(simulation.forks);
 }

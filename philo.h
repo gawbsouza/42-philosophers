@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:32:18 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:52:08 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@
 
 # define FALSE 0
 # define TRUE 1
+
+# ifndef DEBUG_MODE
+#  define DEBUG_MODE 0
+# endif
 
 typedef int	t_bool;
 
