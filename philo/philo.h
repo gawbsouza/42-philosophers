@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 22:29:56 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 09:09:40 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,6 @@ typedef struct s_fork
 	size_t	holded_by;
 }	t_fork;
 
-typedef enum e_status
-{
-	WAITING_FORK,
-	EATING,
-	SLEEPING,
-	THINKING
-}	t_status;
-
 typedef struct s_philo
 {
 	size_t			number;
@@ -71,7 +63,7 @@ typedef struct s_philo
 	long			ate_at;
 	long			died_at;
 	t_ptimer		*timer;
-	t_status		status;
+	t_bool			is_eating;
 	t_bool			stopped;
 	long			stopped_at;
 	pthread_mutex_t	philo_mutex;

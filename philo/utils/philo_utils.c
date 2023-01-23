@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:48:22 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:42:21 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 09:10:29 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	update_philo_health(t_philo *philo)
 
 	current_time = time_millisec();
 	pthread_mutex_lock(&philo->philo_mutex);
-	if (philo->status == EATING)
+	if (philo->is_eating)
 	{
 		pthread_mutex_unlock(&philo->philo_mutex);
 		return ;

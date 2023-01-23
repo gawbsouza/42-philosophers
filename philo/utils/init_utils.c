@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:23:05 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:41:24 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 09:09:58 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	philosopher_init(t_philo *philo, size_t number)
 	philo->died_at = 0;
 	philo->stopped_at = 0;
 	philo->meals = 0;
-	philo->status = WAITING_FORK;
+	philo->is_eating = FALSE;
 	philo->fork_mutex = NULL;
 	philo->timer = NULL;
 	philo->left_fork = NULL;
