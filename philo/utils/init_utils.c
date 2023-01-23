@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:23:05 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 09:09:58 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 16:34:37 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ void	simulation_philos_init(t_simulation *simulation, t_ptimer *timer)
 		simulation->philos[i].fork_mutex = &simulation->fork_mutex;
 		simulation->philos[i].timer = timer;
 		simulation->philos[i].left_fork = &simulation->forks[i];
-		if (i == simulation->philos_num - 1)
-			simulation->philos[i].right_fork = &simulation->forks[0];
-		else if (simulation->philos_num <= 1)
+		if (simulation->philos_num <= 1)
 			simulation->philos[i].right_fork = NULL;
+		else if (i == simulation->philos_num - 1)
+			simulation->philos[i].right_fork = &simulation->forks[0];
 		else
 			simulation->philos[i].right_fork = &simulation->forks[i + 1];
 		i++;
