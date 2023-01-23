@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:33 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:57:55 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:29:10 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 static void	print_philo(t_philo *philo);
 
-void	summary(t_table *table)
+void	summary(t_simulation *simulation)
 {
 	t_philo	*philo;
 	size_t	i;
 
 	printf("\nSUMMARY ====\n");
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		philo = &table->philos[i];
+		philo = &simulation->philos[i];
 		print_philo(philo);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:23:05 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:25:16 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:28:15 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ void	timer_init(t_ptimer *timer, long death, long eat, long sleep)
 	timer->sleep_interv = sleep;
 }
 
-void	table_init(t_table *table, size_t philos_num, int meals_goal)
+void	simulation_init(t_simulation *s, size_t philos_num, int meals_goal)
 {
-	table->meals_goal = meals_goal;
-	table->philos_num = philos_num;
-	table->forks = (t_fork *) malloc(sizeof(t_fork) * philos_num);
-	table->philos = (t_philo *) malloc(sizeof(t_philo) * philos_num);
-	pthread_mutex_init(&table->fork_mutex, NULL);
+	s->meals_goal = meals_goal;
+	s->philos_num = philos_num;
+	s->forks = (t_fork *) malloc(sizeof(t_fork) * philos_num);
+	s->philos = (t_philo *) malloc(sizeof(t_philo) * philos_num);
+	pthread_mutex_init(&s->fork_mutex, NULL);
 }
 
 void	philosopher_init(t_philo *philo, size_t number)
@@ -46,42 +46,42 @@ void	philosopher_init(t_philo *philo, size_t number)
 	pthread_mutex_init(&philo->philo_mutex, NULL);
 }
 
-void	table_philos_init(t_table *table, t_ptimer *timer)
+void	simulation_philos_init(t_simulation *simulation, t_ptimer *timer)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		table->forks[i].available = TRUE;
-		table->forks[i].holded_by = 0;
-		philosopher_init(&table->philos[i], i + 1);
-		table->philos[i].fork_mutex = &table->fork_mutex;
-		table->philos[i].timer = timer;
-		table->philos[i].left_fork = &table->forks[i];
-		if (i == table->philos_num - 1)
-			table->philos[i].right_fork = &table->forks[0];
-		else if (table->philos_num <= 1)
-			table->philos[i].right_fork = NULL;
+		simulation->forks[i].available = TRUE;
+		simulation->forks[i].holded_by = 0;
+		philosopher_init(&simulation->philos[i], i + 1);
+		simulation->philos[i].fork_mutex = &simulation->fork_mutex;
+		simulation->philos[i].timer = timer;
+		simulation->philos[i].left_fork = &simulation->forks[i];
+		if (i == simulation->philos_num - 1)
+			simulation->philos[i].right_fork = &simulation->forks[0];
+		else if (simulation->philos_num <= 1)
+			simulation->philos[i].right_fork = NULL;
 		else
-			table->philos[i].right_fork = &table->forks[i + 1];
+			simulation->philos[i].right_fork = &simulation->forks[i + 1];
 		i++;
 	}
 }
 
-void	threads_init(t_table *table)
+void	threads_init(t_simulation *simulation)
 {
 	pthread_t	t;
 	size_t		i;
 	t_philo		*philo;
 
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		philo = &table->philos[i];
+		philo = &simulation->philos[i];
 		pthread_create(&philo->thread, NULL, philosopher, (void *) philo);
 		i++;
 	}
-	pthread_create(&t, NULL, monitor, (void *) table);
+	pthread_create(&t, NULL, monitor, (void *) simulation);
 	pthread_join(t, NULL);
 }

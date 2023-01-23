@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:12:24 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 17:49:06 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:30:22 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@ static void	to_eat(t_philo *philo);
 static void	to_sleep(t_philo *philo);
 static void	to_think(t_philo *philo);
 
-void	*philosopher(void *data)
+void	*philosopher(void *arg)
 {
 	t_philo	*philo;
 
-	philo = (t_philo *) data;
+	philo = (t_philo *) arg;
 	while (!is_dead(philo) && !is_stopped(philo))
 	{
 		to_eat(philo);

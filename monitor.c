@@ -6,82 +6,82 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 19:04:24 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:30:52 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void		update_philos_health(t_table *table);
-static t_bool	meals_goal_reached(t_table *table);
-static t_bool	has_philo_dead(t_table *table);
+static void		update_philos_health(t_simulation *simulation);
+static t_bool	meals_goal_reached(t_simulation *simulation);
+static t_bool	has_philo_dead(t_simulation *simulation);
 static void		stop_philo(t_philo *philo);
 
-void	*monitor(void *data)
+void	*monitor(void *arg)
 {
-	t_table		*table;
-	size_t		i;
+	t_simulation	*simulation;
+	size_t			i;
 
-	table = (t_table *) data;
-	while (!has_philo_dead(table) && !meals_goal_reached(table))
-		update_philos_health(table);
+	simulation = (t_simulation *) arg;
+	while (!has_philo_dead(simulation) && !meals_goal_reached(simulation))
+		update_philos_health(simulation);
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		stop_philo(&table->philos[i]);
+		stop_philo(&simulation->philos[i]);
 		i++;
 	}
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		pthread_join(table->philos[i].thread, NULL);
+		pthread_join(simulation->philos[i].thread, NULL);
 		i++;
 	}
 	return (NULL);
 }
 
-static void	update_philos_health(t_table *table)
+static void	update_philos_health(t_simulation *simulation)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < table->philos_num)
+	while (i < simulation->philos_num)
 	{
-		update_philo_health(&table->philos[i]);
+		update_philo_health(&simulation->philos[i]);
 		i++;
 	}
 }
 
-static t_bool	meals_goal_reached(t_table *table)
+static t_bool	meals_goal_reached(t_simulation *s)
 {
 	size_t	i;
 	size_t	reached_count;
 
 	reached_count = 0;
 	i = 0;
-	while (i < table->philos_num)
+	while (i < s->philos_num)
 	{
-		pthread_mutex_lock(&table->philos[i].philo_mutex);
-		if (table->philos[i].meals >= table->meals_goal)
+		pthread_mutex_lock(&s->philos[i].philo_mutex);
+		if (s->philos[i].meals >= s->meals_goal)
 				reached_count++;
-		pthread_mutex_unlock(&table->philos[i].philo_mutex);
+		pthread_mutex_unlock(&s->philos[i].philo_mutex);
 		i++;
 	}
-	return ((table->meals_goal && reached_count >= table->philos_num));
+	return ((s->meals_goal && reached_count >= s->philos_num));
 }
 
-static t_bool	has_philo_dead(t_table *table)
+static t_bool	has_philo_dead(t_simulation *s)
 {
 	size_t	i;
 	long	current_time;
 
 	i = 0;
-	while (i < table->philos_num)
+	while (i < s->philos_num)
 	{
-		if (is_dead(&table->philos[i]))
+		if (is_dead(&s->philos[i]))
 		{
 			current_time = time_millisec();
-			printf(RED DIED_MSG RESET, current_time, table->philos[i].number);
+			printf(RED DIED_MSG RESET, current_time, s->philos[i].number);
 			return (TRUE);
 		}
 		i++;

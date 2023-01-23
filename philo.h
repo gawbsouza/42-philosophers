@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:24:57 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:30:22 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,30 +75,30 @@ typedef struct s_philo
 	pthread_t		thread;
 }	t_philo;
 
-typedef struct s_table
+typedef struct s_simulation
 {
 	t_fork			*forks;
 	t_philo			*philos;
 	size_t			philos_num;
 	int				meals_goal;
 	pthread_mutex_t	fork_mutex;
-}	t_table;
+}	t_simulation;
 
 long	time_millisec(void);
 t_bool	is_dead(t_philo *philo);
-void	*monitor(void *data);
+void	*monitor(void *arg);
 void	update_philo_health(t_philo *philo);
-void	summary(t_table *table);
+void	summary(t_simulation *simulation);
 t_bool	is_dead(t_philo *philo);
 t_bool	is_stopped(t_philo *philo);
 t_bool	is_waiting_fork(t_philo *philo);
-void	*philosopher(void *data);
+void	*philosopher(void *arg);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);
 void	timer_init(t_ptimer *timer, long death, long eat, long sleep);
-void	table_init(t_table *table, size_t philos_num, int meals_goal);
+void	simulation_init(t_simulation *s, size_t philos_num, int meals_goal);
 void	philosopher_init(t_philo *philo, size_t number);
-void	table_philos_init(t_table *table, t_ptimer *timer);
-void	threads_init(t_table *table);
+void	simulation_philos_init(t_simulation *simulation, t_ptimer *timer);
+void	threads_init(t_simulation *simulation);
 
 #endif
