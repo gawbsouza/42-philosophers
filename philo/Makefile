@@ -1,14 +1,53 @@
-CFLAGS = -Wall -Werror -Wextra -pthread -g
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/01/23 15:50:58 by gasouza           #+#    #+#              #
+#    Updated: 2023/01/23 16:30:48 by gasouza          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-NAME = philo
+NAME 		=	philo
+SRCS		=	debug/summary.c				\
+				runners/monitor_runner.c	\
+				runners/philo_runner.c		\
+				utils/init_utils.c			\
+				utils/number_utils.c		\
+				utils/philo_utils.c			\
+				utils/status_utils.c		\
+				utils/time_utils.c			\
+				main.c
+OBJS		=	$(SRCS:.c=.o)
+COMPILER	= 	gcc -c
+LINKER		=	gcc
+CFLAGS 		= 	-Wall -Werror -Wextra -pthread
+CLEANUP		=	rm -rf
+DEBUG_MODE	=	0
 
-all:
-	gcc $(CFLAGS) *.c */*.c -o $(NAME)
 
-debug: 
-	gcc $(CFLAGS) -D DEBUG_MODE=1 *.c */*.c -o $(NAME)
+all:		$(NAME)
 
-sanitize:
-	gcc $(CFLAGS) -fsanitize=thread  *.c */*.c -o $(NAME)
+$(NAME):	$(OBJS)
+			$(LINKER) $(OBJS) -o $(NAME)
 
-.PHONY: debug
+%.o: %.c
+			$(COMPILER) $(CFLAGS) -D DEBUG_MODE=$(DEBUG_MODE) $< -o $@
+
+clean:
+			$(CLEANUP) $(OBJS)
+
+fclean:		clean
+			$(CLEANUP) $(NAME)
+
+re:			fclean all
+
+debug:		DEBUG_MODE := 1
+debug:		re
+
+sanitize:	$(OBJS)
+			$(LINKER) $(CFLAGS) -fsanitize=thread $(OBJS) -o $(NAME)
+
+.PHONY:		all clean fclean re debug sanitize
