@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:53:33 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 17:07:09 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/23 21:48:32 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	summary(t_simulation *simulation)
 static void	print_philo(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->philo_mutex);
-	printf("Philo %02ld | ", philo->number);
+	printf("Philo: " BLUE "%02ld" RESET " | ", philo->number);
 	if (philo->died)
-		printf(RED "DEAD " RESET " | ");
+		printf(RED "■" RESET " | ");
 	else
-		printf(GREEN "ALIVE" RESET " | ");
+		printf(GREEN "■" RESET " | ");
 	printf("meals: " BLUE "%2d" RESET " | ", philo->meals);
 	printf("began: " BLUE "%13ld" RESET " | ", philo->began_at);
 	printf("last meal: " BLUE "%13ld" RESET " | ", philo->ate_at);
@@ -69,7 +69,7 @@ static void	print_configuration(t_simulation *s)
 	eat_interval = s->philos[0].timer->eat_interv;
 	sleep_interval = s->philos[0].timer->sleep_interv;
 	printf(GREY "\nCONFIG ====\n" RESET);
-	printf("Philos count: %02ld | ", s->philos_num);
+	printf("Philo Count: " BLUE "%02ld" RESET " | ", s->philos_num);
 	printf("death interval: " BLUE "%4d" RESET " | ", death_interval);
 	printf("eat interval: " BLUE "%4d" RESET " | ", eat_interval);
 	printf("sleep interval: " BLUE "%4d" RESET " | ", sleep_interval);
