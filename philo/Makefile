@@ -6,7 +6,7 @@
 #    By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/23 15:50:58 by gasouza           #+#    #+#              #
-#    Updated: 2023/01/23 16:30:48 by gasouza          ###   ########.fr        #
+#    Updated: 2023/01/23 21:51:16 by gasouza          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,8 @@ SRCS		=	debug/summary.c				\
 				main.c
 OBJS		=	$(SRCS:.c=.o)
 COMPILER	= 	gcc -c
-LINKER		=	gcc
-CFLAGS 		= 	-Wall -Werror -Wextra -pthread
+LINKER		=	gcc -pthread
+CFLAGS 		= 	-Wall -Werror -Wextra
 CLEANUP		=	rm -rf
 DEBUG_MODE	=	0
 
