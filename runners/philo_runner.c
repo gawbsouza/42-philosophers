@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philosopher.c                                      :+:      :+:    :+:   */
+/*   philo_runner.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:12:24 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:30:22 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:33:53 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 static void	to_eat(t_philo *philo);
 static void	to_sleep(t_philo *philo);
 static void	to_think(t_philo *philo);
 
-void	*philosopher(void *arg)
+void	*philo_runner(void *arg)
 {
 	t_philo	*philo;
 

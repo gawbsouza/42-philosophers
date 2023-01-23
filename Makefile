@@ -4,5 +4,5 @@ CFLAGS = -Wall -Werror -Wextra -pthread -g
 NAME = philosophers
 
 all:
-	gcc $(CFLAGS) *.c -o $(NAME)
+	gcc $(CFLAGS) *.c */*.c -o $(NAME)
 	./$(NAME)

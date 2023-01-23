@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 21:23:05 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:28:15 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:33:07 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ void	threads_init(t_simulation *simulation)
 	while (i < simulation->philos_num)
 	{
 		philo = &simulation->philos[i];
-		pthread_create(&philo->thread, NULL, philosopher, (void *) philo);
+		pthread_create(&philo->thread, NULL, philo_runner, (void *) philo);
 		i++;
 	}
-	pthread_create(&t, NULL, monitor, (void *) simulation);
+	pthread_create(&t, NULL, monitor_runner, (void *) simulation);
 	pthread_join(t, NULL);
 }

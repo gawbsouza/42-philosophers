@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 21:30:22 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/22 21:32:18 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ typedef struct s_simulation
 
 long	time_millisec(void);
 t_bool	is_dead(t_philo *philo);
-void	*monitor(void *arg);
+void	*monitor_runner(void *arg);
 void	update_philo_health(t_philo *philo);
 void	summary(t_simulation *simulation);
 t_bool	is_dead(t_philo *philo);
 t_bool	is_stopped(t_philo *philo);
 t_bool	is_waiting_fork(t_philo *philo);
-void	*philosopher(void *arg);
+void	*philo_runner(void *arg);
 void	take_forks(t_philo *philo);
 void	drop_forks(t_philo *philo);
 void	timer_init(t_ptimer *timer, long death, long eat, long sleep);
