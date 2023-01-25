@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 17:10:56 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 17:20:30 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static t_bool	simulation_ended(t_simulation *simulation)
 {
 	size_t	i;
 	size_t	philos_done;
+	t_bool	has_death;
 
 	philos_done = 0;
 	i = 0;
@@ -57,16 +58,17 @@ static t_bool	simulation_ended(t_simulation *simulation)
 		pthread_mutex_lock(&simulation->philos[i].philo_mutex);
 		update_philo_health(&simulation->philos[i]);
 		if (simulation->philos[i].died)
-		{
-			pthread_mutex_unlock(&simulation->philos[i].philo_mutex);
-			return (TRUE);
-		}
+			has_death = TRUE;
 		if (simulation->philos[i].meals >= simulation->meals_goal)
 				philos_done++;
 		pthread_mutex_unlock(&simulation->philos[i].philo_mutex);
 		i++;
 	}
-	return (simulation->meals_goal && (philos_done >= simulation->philos_num));
+	if (has_death)
+		return (TRUE);
+	if (!simulation->meals_goal)
+		return (FALSE);
+	return (philos_done >= simulation->philos_num);
 }
 
 static void	update_philo_health(t_philo *philo)
