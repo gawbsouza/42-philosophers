@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 17:20:30 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 19:19:27 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,17 @@
 static t_bool	simulation_ended(t_simulation *simulation);
 static void		update_philo_health(t_philo *philo);
 static void		stop_philo(t_philo *philo);
+static void		print_philo_death(t_philo *philo);
 
 void	*monitor_runner(void *arg)
 {
 	t_simulation	*simulation;
 	size_t			i;
-	long			death_time;
-	t_philo			*philo;
 
 	simulation = (t_simulation *) arg;
+	usleep(10000);
 	while (!simulation_ended(simulation))
-		;
+		usleep(500);
 	i = 0;
 	while (i < simulation->philos_num)
 	{
@@ -36,10 +36,6 @@ void	*monitor_runner(void *arg)
 	while (i < simulation->philos_num)
 	{
 		pthread_join(simulation->philos[i].thread, NULL);
-		philo = &simulation->philos[i];
-		death_time = time_millisec() - philo->began_at;
-		if (simulation->philos[i].died)
-			printf(RED DIED_MSG RESET, death_time, philo->number);
 		i++;
 	}
 	return (NULL);
@@ -48,27 +44,38 @@ void	*monitor_runner(void *arg)
 static t_bool	simulation_ended(t_simulation *simulation)
 {
 	size_t	i;
+	t_philo	*philo;
 	size_t	philos_done;
-	t_bool	has_death;
 
 	philos_done = 0;
 	i = 0;
 	while (i < simulation->philos_num)
 	{
-		pthread_mutex_lock(&simulation->philos[i].philo_mutex);
-		update_philo_health(&simulation->philos[i]);
-		if (simulation->philos[i].died)
-			has_death = TRUE;
-		if (simulation->philos[i].meals >= simulation->meals_goal)
-				philos_done++;
-		pthread_mutex_unlock(&simulation->philos[i].philo_mutex);
+		philo = &simulation->philos[i];
+		pthread_mutex_lock(&philo->philo_mutex);
+		update_philo_health(philo);
+		if (philo->died)
+		{
+			print_philo_death(philo);
+			pthread_mutex_unlock(&philo->philo_mutex);
+			return (TRUE);
+		}
+		if (philo->meals >= simulation->meals_goal)
+			philos_done++;
+		pthread_mutex_unlock(&philo->philo_mutex);
 		i++;
 	}
-	if (has_death)
-		return (TRUE);
 	if (!simulation->meals_goal)
 		return (FALSE);
 	return (philos_done >= simulation->philos_num);
+}
+
+static void	print_philo_death(t_philo *philo)
+{
+	long	death_time;
+
+	death_time = time_millisec() - philo->began_at;
+	printf(RED DIED_MSG RESET, death_time, philo->number);
 }
 
 static void	update_philo_health(t_philo *philo)

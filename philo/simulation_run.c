@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 09:23:14 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 10:52:22 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 19:19:55 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,26 @@ void	simulation_run(t_simulation *simulation, t_bool show_summary)
 static void	initialize_philos(t_simulation *simulation)
 {
 	size_t	i;
+	t_philo	*philo;
+	long	start_time;
 
 	simulation->philos = malloc(sizeof(t_philo) * simulation->philos_num);
 	i = 0;
+	start_time = time_millisec();
 	while (i < simulation->philos_num)
 	{
-		philo_init(&simulation->philos[i], i + 1);
-		simulation->philos[i].fork_mutex = &simulation->fork_mutex;
-		simulation->philos[i].timer = &simulation->timer;
-		simulation->philos[i].left_fork = &simulation->forks[i];
+		philo = &simulation->philos[i];
+		philo_init(philo, i + 1);
+		philo->began_at = start_time;
+		philo->fork_mutex = &simulation->fork_mutex;
+		philo->timer = &simulation->timer;
+		philo->left_fork = &simulation->forks[i];
 		if (simulation->philos_num <= 1)
-			simulation->philos[i].right_fork = NULL;
+			philo->right_fork = NULL;
 		else if (i == simulation->philos_num - 1)
-			simulation->philos[i].right_fork = &simulation->forks[0];
+			philo->right_fork = &simulation->forks[0];
 		else
-			simulation->philos[i].right_fork = &simulation->forks[i + 1];
+			philo->right_fork = &simulation->forks[i + 1];
 		i++;
 	}
 }
@@ -69,17 +74,22 @@ static void	start_theads(t_simulation *simulation)
 	pthread_t	monitor_thread;
 	size_t		i;
 	t_philo		*philo;
-	long		start_time;
 
 	pthread_mutex_init(&simulation->fork_mutex, NULL);
-	start_time = time_millisec();
-	i = 0;
+	i = 1;
 	while (i < simulation->philos_num)
 	{
 		philo = &simulation->philos[i];
-		philo->began_at = start_time;
 		pthread_create(&philo->thread, NULL, philo_runner, (void *) philo);
-		i++;
+		i += 2;
+	}
+	i = 0;
+	usleep(500);
+	while (i < simulation->philos_num)
+	{
+		philo = &simulation->philos[i];
+		pthread_create(&philo->thread, NULL, philo_runner, (void *) philo);
+		i += 2;
 	}
 	pthread_create(&monitor_thread, NULL, monitor_runner, (void *) simulation);
 	pthread_join(monitor_thread, NULL);
