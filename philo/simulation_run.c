@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 09:23:14 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 19:19:55 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/26 00:12:53 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static void	start_theads(t_simulation *simulation)
 		i += 2;
 	}
 	i = 0;
-	usleep(500);
+	usleep(50000);
 	while (i < simulation->philos_num)
 	{
 		philo = &simulation->philos[i];

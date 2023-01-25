@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 16:55:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 17:10:08 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/26 00:38:15 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	philo_take_forks(t_philo *philo)
 	waiting_fork = TRUE;
 	while (waiting_fork)
 	{
+		usleep(200);
 		pthread_mutex_lock(&philo->philo_mutex);
 		if (!philo_can_run(philo))
 		{
