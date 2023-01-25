@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 08:40:30 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 10:51:58 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@
 # define FALSE 0
 # define TRUE 1
 
-# ifndef DEBUG_MODE
-#  define DEBUG_MODE 0
+# ifndef SHOW_SUMMARY
+#  define SHOW_SUMMARY 0
 # endif
 
 typedef int	t_bool;
@@ -78,26 +78,30 @@ typedef struct s_simulation
 	t_philo			*philos;
 	size_t			philos_num;
 	int				meals_goal;
+	t_ptimer		timer;
 	pthread_mutex_t	fork_mutex;
 }	t_simulation;
 
-long	time_millisec(void);
-t_bool	is_dead(t_philo *philo);
-void	*monitor_runner(void *arg);
-void	update_philo_health(t_philo *philo);
-void	summary(t_simulation *simulation);
-t_bool	is_dead(t_philo *philo);
-t_bool	is_stopped(t_philo *philo);
-t_bool	is_waiting_fork(t_philo *philo);
-void	*philo_runner(void *arg);
-void	take_forks(t_philo *philo);
-void	drop_forks(t_philo *philo);
-void	timer_init(t_ptimer *timer, long death, long eat, long sleep);
-void	simulation_init(t_simulation *s, size_t philos_num, int meals_goal);
-void	philosopher_init(t_philo *philo, size_t number);
-void	simulation_philos_init(t_simulation *simulation, t_ptimer *timer);
-void	threads_init(t_simulation *simulation);
-int		ft_atoi(const char *s);
+// philo functions
+t_bool	philo_is_dead(t_philo *philo);
+t_bool	philo_is_dead(t_philo *philo);
+t_bool	philo_is_stopped(t_philo *philo);
+t_bool	philo_is_waiting_fork(t_philo *philo);
+void	philo_take_forks(t_philo *philo);
+void	philo_drop_forks(t_philo *philo);
+void	philo_update_health(t_philo *philo);
 long	philo_running_time(t_philo *philo);
+
+// runners functions
+void	*monitor_runner(void *arg);
+void	*philo_runner(void *arg);
+
+// simulation functions
+void	simulation_run(t_simulation *simulation, t_bool debug_mode);
+void	summary(t_simulation *simulation);
+
+// others functions
+int		ft_atoi(const char *s);
+long	time_millisec(void);
 
 #endif

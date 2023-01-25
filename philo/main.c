@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 23:06:48 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 10:38:55 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,18 @@ static t_bool	is_valid_args(int argc, const char **argv);
 
 int	main(int argc, const char **argv)
 {
-	t_ptimer		timer;
 	t_simulation	simulation;
-	int				meals_goal;
 
 	if (!is_valid_args(argc, argv))
 		return (1);
+	simulation.philos_num = ft_atoi(argv[1]);
+	simulation.timer.death_interv = ft_atoi(argv[2]);
+	simulation.timer.eat_interv = ft_atoi(argv[3]);
+	simulation.timer.sleep_interv = ft_atoi(argv[4]);
+	simulation.meals_goal = 0;
 	if (argc == 6)
-		meals_goal = ft_atoi(argv[5]);
-	else
-		meals_goal = 0;
-	timer_init(&timer, ft_atoi(argv[2]), ft_atoi(argv[3]), ft_atoi(argv[4]));
-	simulation_init(&simulation, ft_atoi(argv[1]), meals_goal);
-	simulation_philos_init(&simulation, &timer);
-	threads_init(&simulation);
-	if (DEBUG_MODE)
-		summary(&simulation);
-	free(simulation.philos);
-	free(simulation.forks);
+		simulation.meals_goal = ft_atoi(argv[5]);
+	simulation_run(&simulation, SHOW_SUMMARY);
 }
 
 static void	print_usage_message(void)

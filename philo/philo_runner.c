@@ -6,11 +6,11 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:12:24 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 09:13:54 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 10:34:57 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 static void	to_eat(t_philo *philo);
 static void	to_sleep(t_philo *philo);
@@ -21,7 +21,7 @@ void	*philo_runner(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
-	while (!is_dead(philo) && !is_stopped(philo))
+	while (!philo_is_dead(philo) && !philo_is_stopped(philo))
 	{
 		to_eat(philo);
 		to_sleep(philo);
@@ -32,8 +32,8 @@ void	*philo_runner(void *arg)
 
 static void	to_eat(t_philo *philo)
 {
-	take_forks(philo);
-	if (is_dead(philo) || is_stopped(philo))
+	philo_take_forks(philo);
+	if (philo_is_dead(philo) || philo_is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
 	printf(EATING_MSG, philo_running_time(philo), philo->number);
@@ -45,12 +45,12 @@ static void	to_eat(t_philo *philo)
 	philo->meals++;
 	philo->is_eating = FALSE;
 	pthread_mutex_unlock(&philo->philo_mutex);
-	drop_forks(philo);
+	philo_drop_forks(philo);
 }
 
 static void	to_sleep(t_philo *philo)
 {
-	if (is_dead(philo) || is_stopped(philo))
+	if (philo_is_dead(philo) || philo_is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
 	printf(SLEEPING_MSG, philo_running_time(philo), philo->number);
@@ -60,7 +60,7 @@ static void	to_sleep(t_philo *philo)
 
 static void	to_think(t_philo *philo)
 {
-	if (is_dead(philo) || is_stopped(philo))
+	if (philo_is_dead(philo) || philo_is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
 	printf(THINKING_MSG, philo_running_time(philo), philo->number);

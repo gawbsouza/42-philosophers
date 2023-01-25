@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   number_utils.c                                     :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 22:27:06 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/22 22:57:15 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 10:08:52 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 static int	ft_isdigit(int c);
 static int	calc(const char *s, int *number);

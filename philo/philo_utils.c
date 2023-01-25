@@ -6,18 +6,18 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:48:22 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 08:37:35 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 10:33:00 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../philo.h"
+#include "philo.h"
 
 long	philo_running_time(t_philo *philo)
 {
 	return (time_millisec() - philo->began_at);
 }
 
-void	update_philo_health(t_philo *philo)
+void	philo_update_health(t_philo *philo)
 {
 	long	compare_time;
 	long	current_time;
@@ -39,14 +39,14 @@ void	update_philo_health(t_philo *philo)
 	pthread_mutex_unlock(&philo->philo_mutex);
 }
 
-void	take_forks(t_philo *philo)
+void	philo_take_forks(t_philo *philo)
 {
 	t_bool	waiting_fork;
 
-	waiting_fork = (!philo->ate_at || is_waiting_fork(philo));
+	waiting_fork = (!philo->ate_at || philo_is_waiting_fork(philo));
 	while (waiting_fork)
 	{
-		if (is_dead(philo) || is_stopped(philo))
+		if (philo_is_dead(philo) || philo_is_stopped(philo))
 			break ;
 		pthread_mutex_lock(philo->fork_mutex);
 		pthread_mutex_lock(&philo->philo_mutex);
@@ -64,13 +64,13 @@ void	take_forks(t_philo *philo)
 		}
 		pthread_mutex_unlock(&philo->philo_mutex);
 		pthread_mutex_unlock(philo->fork_mutex);
-		waiting_fork = is_waiting_fork(philo);
+		waiting_fork = philo_is_waiting_fork(philo);
 	}
 }
 
-void	drop_forks(t_philo *philo)
+void	philo_drop_forks(t_philo *philo)
 {
-	if (is_dead(philo) || is_stopped(philo))
+	if (philo_is_dead(philo) || philo_is_stopped(philo))
 		return ;
 	pthread_mutex_lock(philo->fork_mutex);
 	pthread_mutex_lock(&philo->philo_mutex);
