@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 10:51:58 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 17:02:56 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,9 @@ typedef struct s_simulation
 }	t_simulation;
 
 // philo functions
-t_bool	philo_is_dead(t_philo *philo);
-t_bool	philo_is_dead(t_philo *philo);
-t_bool	philo_is_stopped(t_philo *philo);
-t_bool	philo_is_waiting_fork(t_philo *philo);
+t_bool	philo_can_run(t_philo *philo);
 void	philo_take_forks(t_philo *philo);
 void	philo_drop_forks(t_philo *philo);
-void	philo_update_health(t_philo *philo);
 long	philo_running_time(t_philo *philo);
 
 // runners functions

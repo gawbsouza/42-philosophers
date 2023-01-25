@@ -6,64 +6,78 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:12:24 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 10:34:57 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 17:11:24 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	to_eat(t_philo *philo);
-static void	to_sleep(t_philo *philo);
-static void	to_think(t_philo *philo);
+static t_bool	to_eat(t_philo *philo);
+static t_bool	to_sleep(t_philo *philo);
+static t_bool	to_think(t_philo *philo);
 
 void	*philo_runner(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *) arg;
-	while (!philo_is_dead(philo) && !philo_is_stopped(philo))
+	while (TRUE)
 	{
-		to_eat(philo);
-		to_sleep(philo);
-		to_think(philo);
+		if (!to_eat(philo))
+			break ;
+		if (!to_sleep(philo))
+			break ;
+		if (!to_think(philo))
+			break ;
 	}
 	return (NULL);
 }
 
-static void	to_eat(t_philo *philo)
+static t_bool	to_eat(t_philo *philo)
 {
 	philo_take_forks(philo);
-	if (philo_is_dead(philo) || philo_is_stopped(philo))
-		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
+	if (!philo_can_run(philo))
+	{
+		pthread_mutex_unlock(&philo->philo_mutex);
+		return (FALSE);
+	}
 	printf(EATING_MSG, philo_running_time(philo), philo->number);
 	philo->is_eating = TRUE;
-	pthread_mutex_unlock(&philo->philo_mutex);
 	philo->ate_at = time_millisec();
+	pthread_mutex_unlock(&philo->philo_mutex);
 	usleep(philo->timer->eat_interv * 1000);
 	pthread_mutex_lock(&philo->philo_mutex);
 	philo->meals++;
 	philo->is_eating = FALSE;
-	pthread_mutex_unlock(&philo->philo_mutex);
 	philo_drop_forks(philo);
+	pthread_mutex_unlock(&philo->philo_mutex);
+	return (TRUE);
 }
 
-static void	to_sleep(t_philo *philo)
+static t_bool	to_sleep(t_philo *philo)
 {
-	if (philo_is_dead(philo) || philo_is_stopped(philo))
-		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
+	if (!philo_can_run(philo))
+	{
+		pthread_mutex_unlock(&philo->philo_mutex);
+		return (FALSE);
+	}
 	printf(SLEEPING_MSG, philo_running_time(philo), philo->number);
 	pthread_mutex_unlock(&philo->philo_mutex);
 	usleep(philo->timer->sleep_interv * 1000);
+	return (TRUE);
 }
 
-static void	to_think(t_philo *philo)
+static t_bool	to_think(t_philo *philo)
 {
-	if (philo_is_dead(philo) || philo_is_stopped(philo))
-		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
+	if (!philo_can_run(philo))
+	{
+		pthread_mutex_unlock(&philo->philo_mutex);
+		return (FALSE);
+	}
 	printf(THINKING_MSG, philo_running_time(philo), philo->number);
 	pthread_mutex_unlock(&philo->philo_mutex);
-	usleep(20 * 1000);
+	return (TRUE);
 }

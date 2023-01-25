@@ -6,15 +6,14 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:14:12 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 10:33:50 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 17:10:56 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void		update_philos_health(t_simulation *simulation);
-static t_bool	meals_goal_reached(t_simulation *simulation);
-static t_bool	has_philo_dead(t_simulation *simulation);
+static t_bool	simulation_ended(t_simulation *simulation);
+static void		update_philo_health(t_philo *philo);
 static void		stop_philo(t_philo *philo);
 
 void	*monitor_runner(void *arg)
@@ -25,8 +24,8 @@ void	*monitor_runner(void *arg)
 	t_philo			*philo;
 
 	simulation = (t_simulation *) arg;
-	while (!has_philo_dead(simulation) && !meals_goal_reached(simulation))
-		update_philos_health(simulation);
+	while (!simulation_ended(simulation))
+		;
 	i = 0;
 	while (i < simulation->philos_num)
 	{
@@ -38,7 +37,7 @@ void	*monitor_runner(void *arg)
 	{
 		pthread_join(simulation->philos[i].thread, NULL);
 		philo = &simulation->philos[i];
-		death_time = philo->died_at - philo->began_at;
+		death_time = time_millisec() - philo->began_at;
 		if (simulation->philos[i].died)
 			printf(RED DIED_MSG RESET, death_time, philo->number);
 		i++;
@@ -46,48 +45,47 @@ void	*monitor_runner(void *arg)
 	return (NULL);
 }
 
-static void	update_philos_health(t_simulation *simulation)
+static t_bool	simulation_ended(t_simulation *simulation)
 {
 	size_t	i;
+	size_t	philos_done;
 
+	philos_done = 0;
 	i = 0;
 	while (i < simulation->philos_num)
 	{
-		philo_update_health(&simulation->philos[i]);
-		i++;
-	}
-}
-
-static t_bool	meals_goal_reached(t_simulation *s)
-{
-	size_t	i;
-	size_t	reached_count;
-
-	reached_count = 0;
-	i = 0;
-	while (i < s->philos_num)
-	{
-		pthread_mutex_lock(&s->philos[i].philo_mutex);
-		if (s->philos[i].meals >= s->meals_goal)
-				reached_count++;
-		pthread_mutex_unlock(&s->philos[i].philo_mutex);
-		i++;
-	}
-	return ((s->meals_goal && reached_count >= s->philos_num));
-}
-
-static t_bool	has_philo_dead(t_simulation *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < s->philos_num)
-	{
-		if (philo_is_dead(&s->philos[i]))
+		pthread_mutex_lock(&simulation->philos[i].philo_mutex);
+		update_philo_health(&simulation->philos[i]);
+		if (simulation->philos[i].died)
+		{
+			pthread_mutex_unlock(&simulation->philos[i].philo_mutex);
 			return (TRUE);
+		}
+		if (simulation->philos[i].meals >= simulation->meals_goal)
+				philos_done++;
+		pthread_mutex_unlock(&simulation->philos[i].philo_mutex);
 		i++;
 	}
-	return (FALSE);
+	return (simulation->meals_goal && (philos_done >= simulation->philos_num));
+}
+
+static void	update_philo_health(t_philo *philo)
+{
+	long	compare_time;
+	long	current_time;
+
+	current_time = time_millisec();
+	if (philo->is_eating)
+	{
+		return ;
+	}
+	if (!philo->ate_at)
+		compare_time = philo->began_at;
+	else
+		compare_time = philo->ate_at;
+	philo->died = (current_time - compare_time >= philo->timer->death_interv);
+	if (philo->died)
+		philo->died_at = current_time;
 }
 
 static void	stop_philo(t_philo *philo)
