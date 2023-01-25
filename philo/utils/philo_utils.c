@@ -6,11 +6,16 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 16:48:22 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 09:10:29 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 08:37:35 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
+
+long	philo_running_time(t_philo *philo)
+{
+	return (time_millisec() - philo->began_at);
+}
 
 void	update_philo_health(t_philo *philo)
 {
@@ -49,13 +54,13 @@ void	take_forks(t_philo *philo)
 		{
 			philo->left_fork->available = FALSE;
 			philo->left_fork->holded_by = philo->number;
-			printf(FORK_MSG, time_millisec(), philo->number);
+			printf(FORK_MSG, philo_running_time(philo), philo->number);
 		}
 		if (philo->right_fork && philo->right_fork->available)
 		{
 			philo->right_fork->available = FALSE;
 			philo->right_fork->holded_by = philo->number;
-			printf(FORK_MSG, time_millisec(), philo->number);
+			printf(FORK_MSG, philo_running_time(philo), philo->number);
 		}
 		pthread_mutex_unlock(&philo->philo_mutex);
 		pthread_mutex_unlock(philo->fork_mutex);

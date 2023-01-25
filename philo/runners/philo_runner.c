@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 17:12:24 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 09:11:39 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 09:13:54 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ static void	to_eat(t_philo *philo)
 	if (is_dead(philo) || is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
-	printf(EATING_MSG, time_millisec(), philo->number);
+	printf(EATING_MSG, philo_running_time(philo), philo->number);
 	philo->is_eating = TRUE;
 	pthread_mutex_unlock(&philo->philo_mutex);
+	philo->ate_at = time_millisec();
 	usleep(philo->timer->eat_interv * 1000);
 	pthread_mutex_lock(&philo->philo_mutex);
 	philo->meals++;
-	philo->ate_at = time_millisec();
 	philo->is_eating = FALSE;
 	pthread_mutex_unlock(&philo->philo_mutex);
 	drop_forks(philo);
@@ -53,7 +53,7 @@ static void	to_sleep(t_philo *philo)
 	if (is_dead(philo) || is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
-	printf(SLEEPING_MSG, time_millisec(), philo->number);
+	printf(SLEEPING_MSG, philo_running_time(philo), philo->number);
 	pthread_mutex_unlock(&philo->philo_mutex);
 	usleep(philo->timer->sleep_interv * 1000);
 }
@@ -63,7 +63,7 @@ static void	to_think(t_philo *philo)
 	if (is_dead(philo) || is_stopped(philo))
 		return ;
 	pthread_mutex_lock(&philo->philo_mutex);
-	printf(THINKING_MSG, time_millisec(), philo->number);
+	printf(THINKING_MSG, philo_running_time(philo), philo->number);
 	pthread_mutex_unlock(&philo->philo_mutex);
 	usleep(20 * 1000);
 }

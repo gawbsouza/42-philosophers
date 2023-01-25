@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:46:50 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/23 16:57:25 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 08:40:30 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@
 # define GREEN "\033[0;32m"
 # define GREY "\033[1;30m"
 
-# define EATING_MSG "%ld %ld is eating\n"
-# define SLEEPING_MSG "%ld %ld is sleeping\n"
-# define THINKING_MSG "%ld %ld is thinking\n"
-# define FORK_MSG "%ld %ld has taken a fork\n"
-# define DIED_MSG "%ld %ld died\n"
+# define EATING_MSG "%-5ld %-2ld is eating\n"
+# define SLEEPING_MSG "%-5ld %-2ld is sleeping\n"
+# define THINKING_MSG "%-5ld %-2ld is thinking\n"
+# define FORK_MSG "%-5ld %-2ld has taken a fork\n"
+# define DIED_MSG "%-5ld %-2ld died\n"
 
 # define FALSE 0
 # define TRUE 1
@@ -98,5 +98,6 @@ void	philosopher_init(t_philo *philo, size_t number);
 void	simulation_philos_init(t_simulation *simulation, t_ptimer *timer);
 void	threads_init(t_simulation *simulation);
 int		ft_atoi(const char *s);
+long	philo_running_time(t_philo *philo);
 
 #endif
