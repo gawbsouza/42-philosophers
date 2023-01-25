@@ -6,7 +6,7 @@
 /*   By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/22 08:48:57 by gasouza           #+#    #+#             */
-/*   Updated: 2023/01/25 10:38:55 by gasouza          ###   ########.fr       */
+/*   Updated: 2023/01/25 11:28:19 by gasouza          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,24 @@ int	main(int argc, const char **argv)
 
 static void	print_usage_message(void)
 {
-	printf(BLUE "Correct usage: \n" RESET);
+	printf("\nusage:\t");
 	printf("philo ");
 	printf("number_of_philosophers ");
 	printf("time_to_die ");
 	printf("time_to_eat ");
 	printf("time_to_sleep ");
-	printf(GREY "[times_each_philosopher_must_eat] \n" RESET);
+	printf("[times_each_philosopher_must_eat] \n\n");
+	printf("  number_of_philosophers \t\t");
+	printf("number of philosophers into the simulation.\n");
+	printf("  time_to_die \t\t\t\t");
+	printf("time in milliseconds that a philosopher die of starve.\n");
+	printf("  time_to_eat \t\t\t\t");
+	printf("time in milliseconds it takes a philosopher to eat.\n");
+	printf("  time_to_sleep \t\t\t");
+	printf("time in milliseconds it takes a philosopher to sleep.\n");
+	printf("  [times_each_philosopher_must_eat] \t");
+	printf("the simulation ends after all philosophers have eaten\n");
+	printf("\t\t\t\t\tthis minimum times.\n\n");
 }
 
 static t_bool	is_valid_args(int argc, const char **argv)
