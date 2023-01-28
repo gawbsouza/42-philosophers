@@ -6,7 +6,7 @@
 #    By: gasouza <gasouza@student.42sp.org.br>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/23 15:50:58 by gasouza           #+#    #+#              #
-#    Updated: 2023/01/25 17:02:40 by gasouza          ###   ########.fr        #
+#    Updated: 2023/01/28 14:15:28 by gasouza          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ COMPILER	= 	gcc -c
 LINKER		=	gcc -pthread
 CFLAGS 		= 	-Wall -Werror -Wextra -g
 CLEANUP		=	rm -rf
-SUMMARY		=	0
+SUMMARY		=	1
 
 
 all:		$(NAME)
@@ -44,8 +44,8 @@ fclean:		clean
 
 re:			fclean all
 
-summary:	SUMMARY := 1
-summary:	re
+no-summary:	SUMMARY := 0
+no-summary:	re
 
 sanitize:	$(OBJS)
 			$(LINKER) $(CFLAGS) -fsanitize=thread $(OBJS) -o $(NAME)
